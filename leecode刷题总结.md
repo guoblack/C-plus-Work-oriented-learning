@@ -478,8 +478,28 @@ public:
 > 输出：5, nums = [1,1,2,2,3]
 > ```
 
+
+
 ```c++
-//定义两个指针slow，fast。slow表示处理后的数组长度，fast表示已经检查过的数组长度。nums[slow-1]为上一个应该被保留的元素class Solution {public:    int removeDuplicates(vector<int>& nums)     {       	int slow(2),fast(2);        if(nums.size()<=2)	return nums.size();	//如果数组长度小于等于2，直接返回        for(;fast<nums.size();fast++)        {            if(nums[slow-2]!=nums[fast])		//如果最大重复次数为n，则 nums[slow-n]!=nums[fast] ;对应的int slow(n),fast(n);            {                nums[slow] = nums[fast];                slow++;                //等价于 nums[slow++] = nums[fast];            }        }        return slow;    }};
+//定义两个指针slow，fast。slow表示处理后的数组长度，fast表示已经检查过的数组长度。nums[slow-1]为上一个应该被保留的元素
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) 
+    {   
+    	int slow(2),fast(2);
+        if(nums.size()<=2)	return nums.size();	//如果数组长度小于等于2，直接返回
+        for(;fast<nums.size();fast++)
+        {
+            if(nums[slow-2]!=nums[fast])		//如果最大重复次数为n，则 nums[slow-n]!=nums[fast] ;对应的int slow(n),fast(n);
+            {
+                nums[slow] = nums[fast];
+                slow++;
+                //等价于 nums[slow++] = nums[fast];
+            }
+        }
+        return slow;
+    }
+};
 ```
 
 
@@ -493,8 +513,12 @@ public:
 > 元素的顺序可以改变。你不需要考虑数组中超出新长度后面的元素。
 >
 > ```c++
-> //示例：输入：nums = [3,2,2,3], val = 3输出：2, nums = [2,2]
+> //示例：
+> 输入：nums = [3,2,2,3], val = 3
+> 输出：2, nums = [2,2]
 > ```
+
+
 
 ![27.移除元素-暴力解法](https://typora-1300187609.cos.ap-chongqing.myqcloud.com/img/68747470733a2f2f747661312e73696e61696d672e636e2f6c617267652f30303865476d5a456c7931676e747263377839746a673330647530396d316b792e676966)
 
@@ -504,8 +528,49 @@ public:
 
 ​																											<!--双指针法-->
 
+
+
 ```C++
-//法一：暴力解法		时间复杂度O（n²）class Solution {public:    int removeElement(vector<int>& nums, int val)     {        int size = nums.size();        if(nums.empty())    return 0;        for(int i=0;i<size;i++)        {            if(nums[i]==val)            {                for(int j=i+1;j<size;j++)                {                    nums[j-1]=nums[j];                }                i--;//因为下标i以后的数值都向前移动了一位，所以i也向前移动一位                size--;            }        }        return size;    }};//法二：双指针		时间复杂度O（n）class Solution {public:    int removeElement(vector<int>& nums, int val)     {        if(nums.empty())    return 0;        int slow(0),fast(0);        //双指针：一个for循环实现两个for循环的功能        for(;fast<nums.size();fast++)         {            if(nums[fast]!=val)            {                nums[slow++] = nums[fast];            }        }        return slow;    }};
+//法一：暴力解法		时间复杂度O（n²）
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) 
+    {
+        int size = nums.size();
+        if(nums.empty())    return 0;
+        for(int i=0;i<size;i++)
+        {
+            if(nums[i]==val)
+            {
+                for(int j=i+1;j<size;j++)
+                {
+                    nums[j-1]=nums[j];
+                }
+                i--;//因为下标i以后的数值都向前移动了一位，所以i也向前移动一位
+                size--;
+            }
+        }
+        return size;
+    }
+};
+//法二：双指针		时间复杂度O（n）
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) 
+    {
+        if(nums.empty())    return 0;
+        int slow(0),fast(0);
+        //双指针：一个for循环实现两个for循环的功能
+        for(;fast<nums.size();fast++) 
+        {
+            if(nums[fast]!=val)
+            {
+                nums[slow++] = nums[fast];
+            }
+        }
+        return slow;
+    }
+};
 ```
 
 ### 142.[环形链表 II](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
@@ -520,8 +585,28 @@ public:
 >
 > - 你是否可以使用 `O(1)` 空间解决此题？
 
-```c++
-//快指针每次走2，慢指针每次走1，快指针走的距离是慢指针的两倍。而快指针又比慢指针多走了一圈。所以 head 到环的起点+环的起点到他们相遇的点的距离 与 环一圈的距离相等。现在重新开始，head 运行到环起点 和 相遇点到环起点 的距离也是相等的，相当于他们同时减掉了 环的起点到他们相遇的点的距离class Solution {public:    ListNode *detectCycle(ListNode *head)    {    	ListNode *slow = head,*fast = head;        if(!fast||!fast->next)	return null;        do        {            fast = fast->next->next;            slow = slow->next;        }while(fast!=slow);        fast = head;        while(fast!=slow)        {            fast = fast->next;            slow = slow->next;        }        return fast;    }};
+```C++
+//快指针每次走2，慢指针每次走1，快指针走的距离是慢指针的两倍。而快指针又比慢指针多走了一圈。所以 head 到环的起点+环的起点到他们相遇的点的距离 与 环一圈的距离相等。现在重新开始，head 运行到环起点 和 相遇点到环起点 的距离也是相等的，相当于他们同时减掉了 环的起点到他们相遇的点的距离
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head)
+    {
+    	ListNode *slow = head,*fast = head;
+        if(!fast||!fast->next)	return null;
+        do
+        {
+            fast = fast->next->next;
+            slow = slow->next;
+        }while(fast!=slow);
+        fast = head;
+        while(fast!=slow)
+        {
+            fast = fast->next;
+            slow = slow->next;
+        }
+        return fast;
+    }
+};
 ```
 
 ### [240. 搜索二维矩阵 II](https://leetcode-cn.com/problems/search-a-2d-matrix-ii/)📺
@@ -534,7 +619,8 @@ public:
 > ![image-20210506203415135](https://typora-1300187609.cos.ap-chongqing.myqcloud.com/img/image-20210506203415135.png)
 >
 > ```c++
-> 输入：matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 5输出：true
+> 输入：matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 5
+> 输出：true
 > ```
 
 > 如果 **左下角元素** 大于了目标值，则目标值一定在该行的上方， **左下角元素** 所在行可以消去。
@@ -551,6 +637,23 @@ public:
 <video src="https://typora-1300187609.cos.ap-chongqing.myqcloud.com/video/240%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5.mp4"></video>
 
 ```C++
-class Solution {public:    bool searchMatrix(vector<vector<int>>& matrix, int target)     {        int  i = matrix.size()-1,j=0;   //matrix[i][j]对应最左下角元素        if(matrix.empty()||matrix[0].empty())   return false;        while(i>=0&&j<matrix[0].size())        {            if(matrix[i][j]>target)                i--;//行索引向上移动一格（即 i-- ），即消去矩阵第 i 行元素            else if(matrix[i][j]<target)                j++;//列索引向右移动一格（即 j++ ），即消去矩阵第 j 列元素            else if(matrix[i][j]==target)//找到目标值，直接返回 ture                return true;        }        return false;    }};
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) 
+    {
+        int  i = matrix.size()-1,j=0;   //matrix[i][j]对应最左下角元素
+        if(matrix.empty()||matrix[0].empty())   return false;
+        while(i>=0&&j<matrix[0].size())
+        {
+            if(matrix[i][j]>target)
+                i--;//行索引向上移动一格（即 i-- ），即消去矩阵第 i 行元素
+            else if(matrix[i][j]<target)
+                j++;//列索引向右移动一格（即 j++ ），即消去矩阵第 j 列元素
+            else if(matrix[i][j]==target)//找到目标值，直接返回 ture
+                return true;
+        }
+        return false;
+    }
+};
 ```
 
